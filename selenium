@@ -1,0 +1,41 @@
+import pymysql
+import time
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+
+def get_webdriver():
+    driver = webdriver.Chrome("C:\Program Files (x86)\Google\Chrome\Application\chromedriver.exe")
+    return driver
+
+def get_yisheng_huanyouhui(driver,url):
+    page = 1
+    name = url.replace('.haodf.com/', '')
+    name = name.replace('https://', '')
+    open("C:/Users/13760/Desktop/huanyouhui/" + name + ".txt", 'w', encoding='utf-8').close()
+    f = open("C:/Users/13760/Desktop/huanyouhui/" + name + ".txt", 'a', encoding='utf-8')
+    driver.get(url+'huanyouhui/index.html')
+    while '您访问频率太高，请稍候再试' in driver.page_source:
+        time.sleep(10)
+        driver.refresh()
+    if driver.current_url =='https://www.haodf.com/':
+        return
+    f.write(driver.page_source)
+    print("第" + str(page) + "页")
+    while True:
+        list = driver.find_elements_by_class_name('page_turn_a')
+        if (list.__len__() == 0):
+            break
+        if list[list.__len__() - 2].text == '下一页 >':
+            list[list.__len__() - 2].click()
+            while '您访问频率太高，请稍候再试' in driver.page_source:
+                time.sleep(10)
+                driver.refresh()
+            f.write(driver.page_source)
+            page+=1
+            print('第' + str(page) + '页')
+        else:
+            break
+    f.close()
+if __name__ == '__main__':
+    driver = get_webdriver()
+    get_yisheng_huanyouhui(driver, 'https://fwliuhaibo.haodf.com/')
