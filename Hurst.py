@@ -55,7 +55,7 @@ if __name__ == '__main__':
   with open('C:/Users/13760/Desktop/hurst.csv', mode='r', encoding='utf-8') as infile:
     read = csv.reader(infile)
     for line in read:
-        ts.append(line[1])
+        ts.append(line[5])
         # print(ts)
 N = len(ts)
 ts = np.array(ts)
